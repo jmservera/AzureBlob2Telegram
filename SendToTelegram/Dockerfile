@@ -6,8 +6,8 @@ FROM mcr.microsoft.com/azure-functions/node:2.0
 RUN apt-get update && apt-get install -y ffmpeg && rm -rf /var/lib/apt/lists/*
 
 ENV AzureWebJobsScriptRoot=/home/site/wwwroot \
-    AzureFunctionsJobHost__Logging__Console__IsEnabled=true
-
+    AzureFunctionsJobHost__Logging__Console__IsEnabled=true 
+    
 COPY . /home/site/wwwroot
 
 RUN cd /home/site/wwwroot && \

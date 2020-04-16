@@ -1,11 +1,11 @@
 {
   "bindings": [
     {
-      "name": "myBlob",
       "type": "blobTrigger",
       "direction": "in",
-      "path": "samples-workitems/{name}",
-      "connection": ""
+      "name": "inputBlob",
+      "path": "camerain/{name}",
+      "connection": "servezashot_STORAGE"
     }
   ]
 }
