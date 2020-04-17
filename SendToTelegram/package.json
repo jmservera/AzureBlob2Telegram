@@ -7,7 +7,7 @@
   },
   "author": "jmservera",
   "dependencies": {
-    "ffmpeg": "0.0.4"
+    "ffmpeg-stream": "^0.6.0"
   },
   "main": "index.js",
   "devDependencies": {},
