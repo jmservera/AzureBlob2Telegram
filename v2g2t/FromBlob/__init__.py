@@ -12,7 +12,8 @@ import telegram
 # environment variables
 TELEGRAM_API_KEY='TELEGRAM_API_KEY'
 TELEGRAM_CHAT_ID='TELEGRAM_CHAT_ID'
-FFMPEG_FPS='FFMPEG_FPS'
+TELEGRAM_DISABLE_NOTIFICATION='TELEGRAM_DISABLE_NOTIFICATION' # default=True, set it to false if you want add notification to the messages
+FFMPEG_FPS='FFMPEG_FPS' # default=10
 FFMPEG_WIDTH='FFMPEG_WIDTH' # height is calculated from the width
 FFMEG_NOAUDIO='FFMEG_NOAUDIO' # default=True, set it to false if you want to send audio
 
@@ -31,6 +32,7 @@ def main(inputBlob: func.InputStream):
     if telegram_token==None:
         raise ValueError(f'{TELEGRAM_CHAT_ID} is missing')
 
+    telegram_disable_notification=bool(os.getenv(TELEGRAM_DISABLE_NOTIFICATION,True))
 
     fps=int(os.getenv(FFMPEG_FPS,10))
     width=int(os.getenv(FFMPEG_WIDTH,320))
@@ -73,11 +75,11 @@ def main(inputBlob: func.InputStream):
     os.remove(fullfilename)
 
     # send the reduced file to telegram
-    
+
     with open(reducedfilename,'rb') as animation:
         bot=telegram.Bot(telegram_token)
         if remove_audio:
-            bot.send_animation(telegram_chat,animation)
+            bot.send_animation(telegram_chat,animation, disable_notification=telegram_disable_notification)
         else:
             bot.send_video(telegram_chat,animation)
 
