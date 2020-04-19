@@ -1,5 +1,7 @@
 # Azure Blob to Telegram
 
+![Python application](https://github.com/jmservera/AzureBlob2Telegram/workflows/Python%20application/badge.svg)
+
 A Python Azure Function that uses the [FFmpeg library](https://ffmpeg.org/) to reduce the size of a video uploaded to Blob Storage and sends it to a [Telegram](https://telegram.org/) chat.
 
 As you need to have the FFmpeg library installed to run it, this function should be [deployed as a container](https://docs.microsoft.com/en-us/azure/azure-functions/functions-create-function-linux-custom-image?tabs=bash%2Cportal&pivots=programming-language-python).
