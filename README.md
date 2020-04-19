@@ -14,4 +14,4 @@ As you need to have the FFmpeg library installed to run it, this function should
    * CameraDropFilesStorage
    * TELEGRAM_CHAT_ID
    * TELEGRAM_API_KEY
-5. Enjoy
+5. Enjoy (you may send some files to your Storage account camerain's folder)
