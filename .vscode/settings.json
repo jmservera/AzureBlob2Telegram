@@ -1,8 +1,9 @@
 {
-    "azureFunctions.deploySubpath": "SendToTelegram",
-    "azureFunctions.postDeployTask": "npm install",
-    "azureFunctions.projectLanguage": "JavaScript",
+    "azureFunctions.deploySubpath": ".",
+    "azureFunctions.projectLanguage": "Python",
     "azureFunctions.projectRuntime": "~2",
     "debug.internalConsoleOptions": "neverOpen",
-    "azureFunctions.preDeployTask": "npm prune"
+    "python.pythonPath": ".venv\\Scripts\\python.exe",
+    "python.linting.flake8Enabled": true,
+    "python.linting.enabled": true
 }

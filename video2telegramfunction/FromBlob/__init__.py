@@ -1,8 +1,6 @@
 import logging
 
 import azure.functions as func
-import ffmpeg
-
 import os
 import tempfile
 import subprocess as sp
@@ -10,12 +8,22 @@ import subprocess as sp
 import telegram
 
 # environment variables
-TELEGRAM_API_KEY='TELEGRAM_API_KEY'
-TELEGRAM_CHAT_ID='TELEGRAM_CHAT_ID'
-TELEGRAM_DISABLE_NOTIFICATION='TELEGRAM_DISABLE_NOTIFICATION' # default=True, set it to false if you want add notification to the messages
-FFMPEG_FPS='FFMPEG_FPS' # default=10
-FFMPEG_WIDTH='FFMPEG_WIDTH' # height is calculated from the width
-FFMEG_NOAUDIO='FFMEG_NOAUDIO' # default=True, set it to false if you want to send audio
+TELEGRAM_API_KEY = 'TELEGRAM_API_KEY'
+
+TELEGRAM_CHAT_ID = 'TELEGRAM_CHAT_ID'
+
+# default=True, set it to false if you want add notification to the messages
+TELEGRAM_DISABLE_NOTIFICATION = 'TELEGRAM_DISABLE_NOTIFICATION'
+
+# default=10
+FFMPEG_FPS = 'FFMPEG_FPS'
+
+# height is calculated from the width
+FFMPEG_WIDTH = 'FFMPEG_WIDTH'
+
+# default=True, set it to false if you want to send audio
+FFMEG_NOAUDIO = 'FFMEG_NOAUDIO'
+
 
 def main(inputBlob: func.InputStream):
 
@@ -24,64 +32,69 @@ def main(inputBlob: func.InputStream):
                  f"Blob Size: {inputBlob.length} bytes")
 
     # read environment variables
-    telegram_token=os.getenv(TELEGRAM_API_KEY)
-    if telegram_token==None:
+    telegram_token = os.getenv(TELEGRAM_API_KEY)
+    if telegram_token is None:
         raise ValueError(f'{TELEGRAM_API_KEY} is missing')
-    
-    telegram_chat=os.getenv(TELEGRAM_CHAT_ID)
-    if telegram_token==None:
+
+    telegram_chat = os.getenv(TELEGRAM_CHAT_ID)
+    if telegram_token is None:
         raise ValueError(f'{TELEGRAM_CHAT_ID} is missing')
 
-    telegram_disable_notification=bool(os.getenv(TELEGRAM_DISABLE_NOTIFICATION,True))
+    telegram_disable_notification = \
+        bool(os.getenv(TELEGRAM_DISABLE_NOTIFICATION, True))
 
-    fps=int(os.getenv(FFMPEG_FPS,10))
-    width=int(os.getenv(FFMPEG_WIDTH,320))
-    remove_audio=bool(os.getenv(FFMEG_NOAUDIO,True))
-    audio=''
+    fps = int(os.getenv(FFMPEG_FPS, 10))
+    width = int(os.getenv(FFMPEG_WIDTH, 320))
+    remove_audio = bool(os.getenv(FFMEG_NOAUDIO, True))
+    audio = ''
+
     if remove_audio:
-        audio='-an'
+        audio = '-an'
 
     # set download path to the temp folder
-    basepath=tempfile.gettempdir()
+    basepath = tempfile.gettempdir()
 
-    _,fullfilename=os.path.split(inputBlob.name)    
-    fullfilename=os.path.join(basepath,fullfilename)
-    reducedfilename,extension= os.path.splitext(fullfilename)
-    reducedfilename=os.path.join(basepath,f'{reducedfilename}_b{extension}')
+    _, fullfilename = os.path.split(inputBlob.name)
+    fullfilename = os.path.join(basepath, fullfilename)
+    reducedfilename, extension = os.path.splitext(fullfilename)
+    reducedfilename = os.path.join(basepath, f'{reducedfilename}_b{extension}')
 
     # write the blob stream to a file
-    with open(fullfilename,"wb") as download_file:
+    with open(fullfilename, "wb") as download_file:
         while True:
-            buf=inputBlob.read(4194304)
+            buf = inputBlob.read(4194304)
             download_file.write(bytes(buf))
-            if len(buf)==0:
+            if len(buf) == 0:
                 break
 
     cmd_out = ['ffmpeg',
-    '-y',
-    '-i',fullfilename,
-    audio,
-    '-vf',f'fps={fps},scale={width}:-1', # todo, scale from config
-    '-c:v', 'h264', #'-preset:v', 'ultrafast',
-    reducedfilename]
+               '-y',
+               '-i', fullfilename,
+               audio,
+               '-vf', f'fps={fps},scale={width}:-1',  # todo, scale from config
+               '-c:v', 'h264',  # '-preset:v', 'ultrafast',
+               reducedfilename]
 
     pipe = sp.Popen(cmd_out)
 
     pipe.wait()
 
-
     os.path.getsize(reducedfilename)
-    logging.info(f'File reduced:\n\t{fullfilename}\t{os.path.getsize(fullfilename)}\n\t{reducedfilename}\t{os.path.getsize(reducedfilename)}')
+    logging.info(f'File reduced:\n' +
+                 '\t{fullfilename}\t{os.path.getsize(fullfilename)}\n' +
+                 '\t{reducedfilename}\t{os.path.getsize(reducedfilename)}')
     os.remove(fullfilename)
 
     # send the reduced file to telegram
 
-    with open(reducedfilename,'rb') as animation:
-        bot=telegram.Bot(telegram_token)
+    with open(reducedfilename, 'rb') as animation:
+        bot = telegram.Bot(telegram_token)
         if remove_audio:
-            bot.send_animation(telegram_chat,animation, disable_notification=telegram_disable_notification)
+            bot.send_animation(
+                telegram_chat, animation,
+                disable_notification=telegram_disable_notification)
         else:
-            bot.send_video(telegram_chat,animation)
+            bot.send_video(telegram_chat, animation)
 
     os.remove(reducedfilename)
     # cmd_out = ['ffmpeg',
@@ -92,9 +105,6 @@ def main(inputBlob: func.InputStream):
     #         '-vcodec', 'gif',
     #         '-f','image2pipe',
     #         '-o','-']
-
-
-
     # pipe = sp.Popen(cmd_out, stdin=sp.PIPE)
     # output, _ = pipe.communicate()
 
