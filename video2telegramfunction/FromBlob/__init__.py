@@ -1,11 +1,9 @@
-import logging
-
 import azure.functions as func
+import logging
 import os
-import tempfile
 import subprocess as sp
-
 import telegram
+import tempfile
 
 # environment variables
 TELEGRAM_API_KEY = 'TELEGRAM_API_KEY'
