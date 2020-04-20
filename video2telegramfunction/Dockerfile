@@ -2,6 +2,8 @@
 # FROM mcr.microsoft.com/azure-functions/python:2.0-python3.7-appservice
 FROM mcr.microsoft.com/azure-functions/python:2.0-python3.7
 
+LABEL version="0.8.0-beta"
+
 # add-apt-repository ppa:jonathonf/ffmpeg-4 && 
 RUN apt-get update && apt-get install -y ffmpeg && rm -rf /var/lib/apt/lists/*
 
