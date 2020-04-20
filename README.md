@@ -26,11 +26,13 @@ As you need to have the FFmpeg library installed to run it, this function should
 
 ## Parameters
 
-* AzureWebJobsStorage: mandatory, used for task sincronization by the Azure Functions Platform
-* CameraDropFilesStorage: mandatory, needs to have a *camerain* container where you drop the .mp4 files
-* TELEGRAM_API_KEY : mandatory
-* TELEGRAM_CHAT_ID : mandatory
-* TELEGRAM_DISABLE_NOTIFICATION : default=True, set it to false if you want add notification to the messages
-* FFMPEG_FPS : default=10
-* FFMPEG_WIDTH : default=320, height is calculated from the width
-* FFMEG_NOAUDIO : default=True, set it to false if you want to send audio
+There's some additional parameters that you may use to influence the way video is scaled, here are all the configuration parameters for this container:
+
+* **AzureWebJobsStorage**: mandatory, used for task sincronization by the Azure Functions Platform
+* **CameraDropFilesStorage**: mandatory, needs to have a *camerain* container where you drop the .mp4 files
+* **TELEGRAM_API_KEY**: mandatory, the Bot API Key from Telegram
+* **TELEGRAM_CHAT_ID**: mandatory, the ID of the chat where you want to send the video
+* **TELEGRAM_DISABLE_NOTIFICATION**: default=True, set it to false if you want add notification to the messages
+* **FFMPEG_FPS**: default=10
+* **FFMPEG_WIDTH**: default=320, height is calculated from the width
+* **FFMEG_NOAUDIO**: default=True, set it to false if you want to send audio
