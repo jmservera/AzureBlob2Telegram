@@ -6,6 +6,8 @@ A Python Azure Function that uses the [FFmpeg library](https://ffmpeg.org/) to r
 
 As you need to have the FFmpeg library installed to run it, this function should be [deployed as a container](https://docs.microsoft.com/azure/azure-functions/functions-create-function-linux-custom-image?tabs=bash%2Cportal&pivots=programming-language-python).
 
+You can find a prebuilt container in [Docker Hub](https://hub.docker.com/repository/docker/jmservera/azure-blob-to-telegram).
+
 ## What do I need
 
 * An Azure Storage account with a container named **camerain** where you drop your .mp4 files.
