@@ -1,8 +1,6 @@
-# To enable ssh & remote debugging on app service change the base image to the one below
-# FROM mcr.microsoft.com/azure-functions/python:2.0-python3.7-appservice
-FROM mcr.microsoft.com/azure-functions/python:2.0-python3.7
+FROM mcr.microsoft.com/azure-functions/python:3.0-python3.9
 
-LABEL version="0.8.0-beta"
+LABEL version="1.0"
 
 # add-apt-repository ppa:jonathonf/ffmpeg-4 && 
 RUN apt-get update && apt-get install -y ffmpeg && rm -rf /var/lib/apt/lists/*
