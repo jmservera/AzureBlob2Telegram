@@ -65,28 +65,28 @@ def main(inputBlob: func.InputStream):
 
     pipe = sp.Popen(cmd_out, stdin=sp.PIPE)
 
-    # write the blob stream to a file
-    while True:
-        buf = inputBlob.read(4194304)
-        pipe.stdin.write(buf)
-        if len(buf) == 0:
-            break
-    pipe.stdin.close()
+    try:
+        # write the blob stream to a file
+        while True:
+            buf = inputBlob.read(4194304)
+            pipe.stdin.write(buf)
+            if len(buf) == 0:
+                break
+        pipe.stdin.close()
 
-    pipe.wait()
+        pipe.wait()
 
-    os.path.getsize(fullfilename)
-    logging.info(f'File reduced:\t{os.path.getsize(fullfilename)}')
+        os.path.getsize(fullfilename)
+        logging.info(f'File reduced:\t{os.path.getsize(fullfilename)}')
 
-    # send the reduced file to telegram
-
-    with open(fullfilename, 'rb') as animation:
-        bot = telegram.Bot(telegram_token)
-        if remove_audio:
-            bot.send_animation(
-                telegram_chat, animation,
-                disable_notification=telegram_disable_notification)
-        else:
-            bot.send_video(telegram_chat, animation)
-
-    os.remove(fullfilename)
+        # send the reduced file to telegram
+        with open(fullfilename, 'rb') as animation:
+            bot = telegram.Bot(telegram_token)
+            if remove_audio:
+                bot.send_animation(
+                    telegram_chat, animation,
+                    disable_notification=telegram_disable_notification)
+            else:
+                bot.send_video(telegram_chat, animation)
+    finally:
+        os.remove(fullfilename)
