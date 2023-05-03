@@ -1,6 +1,6 @@
-FROM mcr.microsoft.com/azure-functions/python:3.0-python3.8
+FROM mcr.microsoft.com/azure-functions/python:4-python3.10
 
-LABEL version="1.1"
+LABEL version="1.2"
 
 # add-apt-repository ppa:jonathonf/ffmpeg-4 && 
 RUN apt-get update && apt-get install -y ffmpeg && rm -rf /var/lib/apt/lists/*
